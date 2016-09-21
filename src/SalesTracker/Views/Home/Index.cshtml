@@ -20,9 +20,9 @@
             dataType: 'html',
             url: '@Url.Action("DisplayInventory")',
             success: function (result) {
-                $('#result4').html(result);
+                $('#inventory').html(result);
             }
-        });
+           });
         $.ajax({
             type: 'GET',
             dataType: 'json',
@@ -50,21 +50,25 @@
                             $('#result4').html(result);
                         }
                     });
-                $.ajax({
-                    type: 'GET',
-                    dataType: 'json',
-                    url: '@Url.Action("GetRevenue")',
-                    success: function (result) {
-                        $('#revenue').html(result);
-                    }
+                    $.ajax({
+                        type: 'GET',
+                        dataType: 'json',
+                        url: '@Url.Action("GetRevenue")',
+                        success: function (result) {
+                            $('#revenue').html(result);
+                        }
+                    });
+                  }
                 });
+             });
+        $.ajax({
+            type: 'GET',
+            dataType: 'html',
+            url: '@Url.Action("DisplaySales")',
+            success: function (result) {
+                $('#sales').html(result);
             }
         });
-    });
-
-
-
-
     });
 
 </script>
@@ -118,5 +122,6 @@
          </div>
      </div>
  </div>
-
-<div id="result4"></div>
+<div id="inventory"></div>
+<h3 id="toggle-sales">Show Sales</h3>
+<div id="sales"></div>

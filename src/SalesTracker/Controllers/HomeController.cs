@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using SalesTracker.Data;
 using SalesTracker.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Http;
 
 namespace SalesTracker.Controllers
 {
@@ -34,10 +35,27 @@ namespace SalesTracker.Controllers
             return Json(newSale);
         }
 
+        [HttpPost]
+        public IActionResult ReturnItem(FormCollection collection)
+        {
+            var sale = _context.Sale.FirstOrDefault(s => s.SaleId == int.Parse(Request.Form["id"]));
+             var selectedItem = _context.Item.FirstOrDefault(i => i.ItemId == sale.ItemId);
+            selectedItem.Quantity += sale.Quantity;
+            _context.Sale.Remove(sale);
+            _context.SaveChanges();
+            return RedirectToAction("Index");
+        }
+
         public IActionResult DisplayInventory()
         {
             var items = _context.Item.ToList();
             return View(items);
+        }
+
+        public IActionResult DisplaySales()
+        {
+            var sales = _context.Sale.Include(s => s.Item).ToList();
+            return View(sales);
         }
 
         public IActionResult GetRevenue()
