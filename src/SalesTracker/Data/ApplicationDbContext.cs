@@ -22,5 +22,9 @@ namespace SalesTracker.Data
             // For example, you can rename the ASP.NET Identity table names and more.
             // Add your customizations after calling base.OnModelCreating(builder);
         }
+
+        public DbSet<Item> Item { get; set; }
+
+        public DbSet<Sale> Sale { get; set; }
     }
 }
