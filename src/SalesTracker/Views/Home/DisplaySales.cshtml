@@ -14,7 +14,10 @@
                 @Html.DisplayNameFor(model => model.Quantity)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.UserId)
+                @Html.DisplayNameFor(model => model.User.UserName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SalesComment)
             </th>
             <th></th>
         </tr>
@@ -24,13 +27,18 @@
         {
             <tr>
                 <td>
-                    @Html.DisplayFor(modelItem => sale.Item.Name)
+                    @Html.DisplayFor(modelItem => sale.Item.Name) HEY @sale.SaleId
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => sale.Quantity)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => sale.UserId)
+                    @Html.DisplayFor(modelItem => sale.User.UserName)
+                </td>
+                <td>
+                    <span class='@("comment" + sale.SaleId)'>@Html.DisplayFor(modelItem => sale.SalesComment)</span><span class="edit @("edit" + sale.SaleId)" data-id=@sale.SaleId>EDIT</span>
+                    <input type="text" placeholder="@sale.SalesComment" class='@("updateMessage" + sale.SaleId) hidden' data-id=@sale.SaleId />
+                    <input type="button" value="Save" class='@("save" + sale.SaleId) hidden saveButton' data-id=@sale.SaleId />
                 </td>
                 <td>
                     <a asp-action="Edit" asp-route-id="@sale.SaleId">Edit</a> |
@@ -46,3 +54,29 @@
         }
     </tbody>
 </table>
+<script>
+    $(".saveButton").click(function () {
+        var self = this;
+        var thisId = $(self).prev().data('id');
+        var data = {
+            saleId: thisId,
+            newComment: $(self).prev().val()
+        };
+        $.get('@Url.Action("UpdateSalesComment")', data, function(result) {
+            toggleHidden(self);
+            $('.comment' + thisId).text(result);
+        }, "text");
+    });
+    $('.edit').click(function () {
+        toggleHidden(this);
+    });
+    function toggleHidden(context) {
+        var thisId = $(context).data('id');
+        //alert(thisId);
+        //$('.comment' + thisId, this, '.save' + thisId, '.updateMessage' + thisId).toggleClass('hidden');
+        $('.edit' + thisId).toggleClass('hidden');
+        $('.comment' + thisId).toggleClass('hidden');
+        $('.updateMessage' + thisId).toggleClass('hidden');
+        $('.save' + thisId).toggleClass('hidden');
+    }
+</script>

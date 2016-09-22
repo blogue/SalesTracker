@@ -8,9 +8,10 @@ using SalesTracker.Data;
 namespace SalesTracker.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20160922170456_Restore")]
+    partial class Restore
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.0.0-rtm-21431")
@@ -177,8 +178,6 @@ namespace SalesTracker.Migrations
                     b.Property<int>("ItemId")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<int>("CommissionPercentage");
-
                     b.Property<string>("Name");
 
                     b.Property<int>("Price");
@@ -198,8 +197,6 @@ namespace SalesTracker.Migrations
                     b.Property<int>("ItemId");
 
                     b.Property<int>("Quantity");
-
-                    b.Property<string>("SalesComment");
 
                     b.Property<string>("UserId");
 

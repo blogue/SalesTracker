@@ -8,9 +8,10 @@ using SalesTracker.Data;
 namespace SalesTracker.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20160922163336_SaleVirtualUser")]
+    partial class SaleVirtualUser
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.0.0-rtm-21431")
@@ -177,8 +178,6 @@ namespace SalesTracker.Migrations
                     b.Property<int>("ItemId")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<int>("CommissionPercentage");
-
                     b.Property<string>("Name");
 
                     b.Property<int>("Price");
@@ -199,15 +198,15 @@ namespace SalesTracker.Migrations
 
                     b.Property<int>("Quantity");
 
-                    b.Property<string>("SalesComment");
+                    b.Property<int>("UserId");
 
-                    b.Property<string>("UserId");
+                    b.Property<string>("UserId1");
 
                     b.HasKey("SaleId");
 
                     b.HasIndex("ItemId");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("UserId1");
 
                     b.ToTable("Sales");
                 });
@@ -258,7 +257,7 @@ namespace SalesTracker.Migrations
 
                     b.HasOne("SalesTracker.Models.ApplicationUser", "User")
                         .WithMany()
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("UserId1");
                 });
         }
     }

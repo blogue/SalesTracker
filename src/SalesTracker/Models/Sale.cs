@@ -12,17 +12,19 @@ namespace SalesTracker.Models
     {
         [Key]
         public int SaleId { get; set; }
-        public int UserId { get; set; }
+        public virtual ApplicationUser User { get; set; }
         public int ItemId { get; set; }
         public virtual Item Item { get; set; }
         public int Quantity { get; set; }
+        public string SalesComment { get; set; }
 
-        public Sale(int userId, int itemId, int quantity, int saleId = 0)
+        public Sale(int itemId, int quantity, int saleId = 0)
         {
-            UserId = userId;
+            //UserId = userId;
             ItemId = itemId;
             Quantity = quantity;
             SaleId = saleId;
+            SalesComment = "Great job selling " + quantity + " of these!  Keep it up.";
         }
         public Sale() { }
     }

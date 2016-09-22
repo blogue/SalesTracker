@@ -53,7 +53,7 @@ namespace SalesTracker.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ItemId,Name,Price,Quantity")] Item item)
+        public async Task<IActionResult> Create([Bind("ItemId,Name,Price,Quantity,CommissionPercentage")] Item item)
         {
             if (ModelState.IsValid)
             {

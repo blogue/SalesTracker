@@ -15,6 +15,7 @@
                 }
             });
         });
+
         $.ajax({
             type: 'GET',
             dataType: 'html',
@@ -22,7 +23,8 @@
             success: function (result) {
                 $('#inventory').html(result);
             }
-           });
+        });
+
         $.ajax({
             type: 'GET',
             dataType: 'json',
@@ -32,22 +34,42 @@
             }
         });
 
-    $('.new-sale').submit(function (event) {
-        event.preventDefault();
         $.ajax({
-            url: '@Url.Action("NewSale")',
-            type: 'POST',
-            dataType: 'json',
-            data: $(this).serialize(),
+            type: 'GET',
+            dataType: 'html',
+            url: '@Url.Action("DisplaySales")',
             success: function (result) {
-                var resultMessage = 'You\'ve made a new sale!<br>Item: ' + result.item.name + '<br>Quantity: ' + result.quantity  + '<br>Total: $' + result.item.price*result.quantity +  '<br>UserId: ' + result.userId;
-                $('#result6').html(resultMessage)
+                $('#sales').html(result);
+            }
+        });
+        $('.new-sale').submit(function (event) {
+            event.preventDefault();
+            $.ajax({
+                url: '@Url.Action("NewSale")',
+                type: 'POST',
+                dataType: 'json',
+                data: $(this).serialize(),
+                success: function (result) {
+                    console.log("JSON is:");
+                    console.log(result);
+                    var resultMessage = 'You\'ve made a new sale!<br>Item: ' + result.item.name + '<br>Quantity: ' + result.quantity + '<br>Total: $' + result.item.price * result.quantity + '<br>User: ' + result.user.userName + '<br>Expected commision: $' + ( result.quantity * result.item.price * result.item.commissionPercentage/100 );
+                    $('#result6').html(resultMessage)
                     $.ajax({
                         type: 'GET',
                         dataType: 'html',
                         url: '@Url.Action("DisplayInventory")',
                         success: function (result) {
-                            $('#result4').html(result);
+                            console.log(result);
+                            $('#inventory').html(result);
+                        }
+                    });
+
+                    $.ajax({
+                        type: 'GET',
+                        dataType: 'html',
+                        url: '@Url.Action("DisplaySales")',
+                        success: function (result) {
+                            $('#sales').html(result);
                         }
                     });
                     $.ajax({
@@ -58,16 +80,9 @@
                             $('#revenue').html(result);
                         }
                     });
-                  }
-                });
-             });
-        $.ajax({
-            type: 'GET',
-            dataType: 'html',
-            url: '@Url.Action("DisplaySales")',
-            success: function (result) {
-                $('#sales').html(result);
-            }
+
+                }
+            });
         });
     });
 
@@ -79,11 +94,11 @@
 
 
 <h2>Make Sale</h2>
- <div class="container">
-     <div class="row">
+<div class="container">
+    <div class="row">
         <h4>Sale</h4>
         <hr />
-         <div class="col-md-6">
+        <div class="col-md-6">
             <form asp-action="NewSale" class="new-sale">
                 <div class="form-horizontal">
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -101,27 +116,33 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label asp-for="UserId" class="col-md-2 control-label"></label>
-                        <div class="col-md-10">
-                            <input asp-for="UserId" class="form-control" />
-                            <span asp-validation-for="UserId" class="text-danger" />
-                        </div>
-                    </div>
-                    <div class="form-group">
                         <div class="col-md-offset-2 col-md-10">
                             <input type="submit" value="NewSale" class="btn btn-default" />
                         </div>
                     </div>
                 </div>
             </form>
-         </div>
-         <div class="col-md-6">
-             <h3>Revenue</h3>
-             <div><h3>$<span id="revenue"></span></h3></div>
+        </div>
+        <div class="col-md-6">
+            <h3>Revenue</h3>
+            <div><h3>$<span id="revenue"></span></h3></div>
             <div id="result6"></div>
-         </div>
-     </div>
- </div>
+        </div>
+    </div>
+</div>
 <div id="inventory"></div>
-<h3 id="toggle-sales">Show Sales</h3>
 <div id="sales"></div>
+<hr />
+<h3>AJAX example with Razor syntax</h3>
+<div id="inventoryDisplay">
+    @Html.Partial("DisplayInventory", ViewData["Items"])
+</div>
+<div>
+    <form asp-controller="Home" asp-action="DisplayInventory" data-ajax="true" data-ajax-method="POST" data-ajax-mode="replace" data-ajax-update="#inventoryDisplay">
+        <input type="hidden" id="CurrentPage" name="CurrentPage" value="@ViewBag.CurrentPage" />
+        <input type="hidden" id="LastPage" name="LastPage" value="@ViewBag.LastPage" />
+    </form>
+
+    <input class="btn btn-primary" type="button" id="Previous" value="Previous" />
+    <input class="btn btn-primary" type="button" id="Next" value="Next" />
+</div>
